@@ -1,4 +1,4 @@
-import { Type } from "../transaction.model";
+import { Type } from "src/type.enum";
 
 export class FilterTransactionDto {
     type: Type;
