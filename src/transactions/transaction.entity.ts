@@ -1,4 +1,5 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { IsNotEmpty } from "class-validator";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp } from "typeorm";
 import { Type } from "../type.enum";
 
 @Entity()
@@ -12,25 +13,28 @@ export class Transaction extends BaseEntity {
     @Column({ nullable: false })
     type: Type;
 
-    @Column()
+    @Column({ nullable: true })
     title: string;
 
-    @Column()
+    @Column({ nullable: true })
     note: string;
 
-    @Column()
+    @Column({ nullable: true })
     tag: string;
 
-    @Column({ nullable: false })
-    date: Date;
+    @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
+    date?: Date;
 
-    @Column()
+    @Column('time', {default: (): string => 'LOCALTIMESTAMP'})
+    time?: Timestamp;
+  
+    @Column({ nullable: true, default: false })
     is_planned: boolean;
 
     @Column({ nullable: false})
     category_id: number;
 
-    @Column()
+    @Column({ nullable: true })
     recurring_payment_id: number;
 
     @Column({ nullable: false })

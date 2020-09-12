@@ -1,10 +1,20 @@
 import { Type } from "src/type.enum";
 
-export class FilterTransactionDto {
+export class FilterTransactionsDto {
+    
     type: Type;
-    // category: string;
-    // account: string;
+    
+    category: string;
+    
+    account: string;
+    
     amountFrom: number;
+    
     amountTo: number;
-    // tag: string;
+    
+    dateFrom;
+
+    dateTo;
+    
+    tag: string;
 }

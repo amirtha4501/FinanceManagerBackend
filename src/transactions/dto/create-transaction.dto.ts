@@ -1,17 +1,11 @@
 import { Type } from "src/type.enum";
-import { IsNotEmpty, IsEnum, IsDate } from "class-validator";
-import { Transaction } from "../transaction.entity";
+import { IsNotEmpty } from "class-validator";
 
 export class CreateTransactionDto {
 
-    @IsNotEmpty()
-    id: number;
-
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'amount should not be empty'})
     amount: number;
 
-    @IsNotEmpty()
-    @IsEnum(Transaction)
     type: Type;
 
     title: string;
@@ -20,7 +14,6 @@ export class CreateTransactionDto {
 
     tag: string;
 
-    @IsDate()
     date: Date;
 
     is_planned: boolean;
