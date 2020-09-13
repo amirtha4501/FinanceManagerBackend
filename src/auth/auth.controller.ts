@@ -3,6 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthSignInDto } from './dto/auth.signin.dto';
 import { AuthSignUpDto } from './dto/auth.signup.dto';
+import { GetUser } from './get-user.decorator';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -19,11 +21,5 @@ export class AuthController {
     @Post('/signin')
     signIn(@Body(ValidationPipe) authSignInDto: AuthSignInDto): Promise<{ accessToken: string }> {
         return this.authService.signIn(authSignInDto);
-    }
-
-    @Post('/test')
-    @UseGuards(AuthGuard())
-    test(@Req() req) {
-        console.log(req);
     }
 }

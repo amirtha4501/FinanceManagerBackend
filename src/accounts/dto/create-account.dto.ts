@@ -1,0 +1,14 @@
+import { IsNotEmpty } from "class-validator";
+
+export class CreateAccountDto {
+       
+    @IsNotEmpty()
+    account_name: string;
+
+    current_amount: number;
+
+    // planned_amount: number;
+
+    @IsNotEmpty()
+    user_id: number;
+}
