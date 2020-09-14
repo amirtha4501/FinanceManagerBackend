@@ -3,7 +3,7 @@ import { IsNotEmpty } from "class-validator";
 export class CreateAccountDto {
        
     @IsNotEmpty()
-    account_name: string;
+    name: string;
 
     current_amount: number;
 

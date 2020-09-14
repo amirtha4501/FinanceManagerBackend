@@ -7,18 +7,18 @@ import { CreateAccountDto } from "./dto/create-account.dto";
 export class AccountRepository extends Repository<Account> {
 
     async createAccount(createAccountDto: CreateAccountDto): Promise<Account> {
-        const { account_name, user_id } = createAccountDto;
+        const { name, user_id } = createAccountDto;
 
         const account = new Account();
 
-        account.account_name = account_name;
+        account.name = name;
         account.user_id = user_id;
 
         try {
             await account.save();
         } catch (error) {
             if(error.code === '23505') {
-                throw new ConflictException("account_name already exists");
+                throw new ConflictException("account name already exists");
             } else {
                 throw new InternalServerErrorException();
             }

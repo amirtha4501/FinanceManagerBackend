@@ -1,14 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Timestamp, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
-@Unique(['account_name'])
+@Unique(['name'])
 export class Account extends BaseEntity {
     
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    account_name: string;
+    name: string;
 
     @Column({ type: "decimal", default: 0 })
     current_amount: number;
@@ -18,9 +18,6 @@ export class Account extends BaseEntity {
 
     @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
     date?: Date;
-
-    @Column('time', {default: (): string => 'LOCALTIMESTAMP'})
-    time?: Timestamp;
 
     @Column()
     user_id: number;

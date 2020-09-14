@@ -1,6 +1,6 @@
 export class UpdateAccountDto {
 
-    account_name: string;
+    name: string;
 
     date: Date;
 

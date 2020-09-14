@@ -34,11 +34,11 @@ export class AccountsService {
 
     async updateAccount(id: number, updateAccountDto: UpdateAccountDto): Promise<Account> {
         const account = await this.getAccountById(id);
-        const { current_amount, date, account_name } = updateAccountDto;
+        const { current_amount, date, name } = updateAccountDto;
 
         account.current_amount = current_amount;
         account.date = date;
-        account.account_name = account_name;
+        account.name = name;
 
         await account.save();
         return account;

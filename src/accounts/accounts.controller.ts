@@ -2,8 +2,6 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query,
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { Account } from './account.entity';
-import { UpdateTransactionDto } from 'src/transactions/dto/update-transaction.dto';
-import { Transaction } from 'src/transactions/transaction.entity';
 import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Controller('accounts')
