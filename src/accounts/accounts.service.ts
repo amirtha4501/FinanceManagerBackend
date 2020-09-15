@@ -4,6 +4,7 @@ import { AccountRepository } from './account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { Account } from './account.entity';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class AccountsService {
@@ -13,12 +14,18 @@ export class AccountsService {
         private accountRepository: AccountRepository
     ) {}
 
-    async createAccount(createAccountDto: CreateAccountDto): Promise<Account> {
-        return this.accountRepository.createAccount(createAccountDto);
+    async createAccount(
+        createAccountDto: CreateAccountDto,
+        user: User
+    ): Promise<Account> {
+        return this.accountRepository.createAccount(createAccountDto, user);
     }
     
-    async getAccountById(id: number): Promise<Account> {
-        const found = await this.accountRepository.findOne(id);
+    async getAccountById(
+        id: number,
+        user: User
+    ): Promise<Account> {
+        const found = await this.accountRepository.findOne({ where: { user: user, id: id } });
 
         if(!found) {
             throw new NotFoundException(`Account with ID '${id}' not found`);
@@ -27,13 +34,12 @@ export class AccountsService {
         return found;
     }
    
-    // modify later
-    async getAccounts(user_id: number): Promise<Account[]> {
-        return this.accountRepository.getAccounts(user_id);
+    async getAccounts(user: User): Promise<Account[]> {
+        return this.accountRepository.getAccounts(user);
     }
 
-    async updateAccount(id: number, updateAccountDto: UpdateAccountDto): Promise<Account> {
-        const account = await this.getAccountById(id);
+    async updateAccount(id: number, updateAccountDto: UpdateAccountDto, user: User): Promise<Account> {
+        const account = await this.getAccountById(id, user);
         const { current_amount, date, name } = updateAccountDto;
 
         account.current_amount = current_amount;
@@ -44,11 +50,12 @@ export class AccountsService {
         return account;
     }
     
-    async deleteAccount(id: number): Promise<void> {
-        const result = await this.accountRepository.delete(id);
+    async deleteAccount(id: number, user: User): Promise<void> {
+        const account = await this.getAccountById(id, user);
+        const result = await this.accountRepository.delete(account.id);
         
         if(result.affected === 0) {
-            throw new NotFoundException(`Account not found to delete`);
+            throw new NotFoundException(`Account with ID '${id} not found to delete`);
         }
     }
    

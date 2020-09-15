@@ -1,4 +1,5 @@
 import { IsNotEmpty } from "class-validator";
+import { User } from "src/auth/user.entity";
 
 export class CreateAccountDto {
        
@@ -9,6 +10,4 @@ export class CreateAccountDto {
 
     // planned_amount: number;
 
-    @IsNotEmpty()
-    user_id: number;
 }

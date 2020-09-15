@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { User } from "src/auth/user.entity";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 @Unique(['name'])
@@ -19,6 +20,6 @@ export class Account extends BaseEntity {
     @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
     date?: Date;
 
-    @Column()
-    user_id: number;
+    @ManyToOne(type => User, user => user.accounts, { eager: false })
+    user: User;
 }
