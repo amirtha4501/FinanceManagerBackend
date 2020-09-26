@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import { Type } from "src/type.enum";
 
 export class UpdateTransactionDto {
@@ -20,5 +21,6 @@ export class UpdateTransactionDto {
 
     recurring_payment_id: number;
 
+    @IsNotEmpty()
     account_id: number;
 }

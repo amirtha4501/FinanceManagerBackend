@@ -6,7 +6,7 @@ export class FilterTransactionsDto {
     
     category: string;
     
-    account: string;
+    specifiedAccount: number;
     
     amountFrom: number;
     

@@ -1,5 +1,6 @@
 import { IsNotEmpty } from "class-validator";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp } from "typeorm";
+import { Account } from "src/accounts/account.entity";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne } from "typeorm";
 import { Type } from "../type.enum";
 
 @Entity()
@@ -34,6 +35,8 @@ export class Transaction extends BaseEntity {
     @Column({ nullable: true })
     recurring_payment_id: number;
 
-    @Column({ nullable: false })
-    account_id: number;
+    // @Column({ nullable: false })
+    // account_id: number;
+    @ManyToOne(type => Account, account => account.transactions, { eager: false })
+    account: Account;
 }

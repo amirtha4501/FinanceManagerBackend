@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { FilterTransactionsDto } from './dto/filter-transactions.dto';
@@ -14,28 +14,51 @@ export class TransactionsService {
         private transactionRepository: TransactionRepository
     ) {}
 
-    async createTransaction(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
-        return this.transactionRepository.createTransaction(createTransactionDto);
+    async createTransaction(
+        createTransactionDto: CreateTransactionDto,
+        accounts: Account    
+    ): Promise<Transaction> {
+        return this.transactionRepository.createTransaction(createTransactionDto, accounts);
     }
 
-    async getTransactionById(id: number): Promise<Transaction> {
-        const found = await this.transactionRepository.findOne(id);
-
-        if(!found) {
-            throw new NotFoundException(`Transaction with ID '${id}' not found`);
+    async getTransactionById(id: number, accounts): Promise<Transaction> {
+        var transactionIds: number[] = [];
+        
+        for(let account of accounts) {
+            for(let transaction of account.transactions) {
+                transactionIds.push(transaction.id);
+            }
         }
 
-        return found
+        if(transactionIds.includes(id)) {
+            const found = await this.transactionRepository.findOne(id);
+            if(!found) {
+                throw new NotFoundException(`Transaction with ID '${id}' not found`);
+            }
+            return found
+        } else {
+            throw new BadRequestException("Transaction id is not exists in the user accounts");
+        }
     }
 
-    async getTransactions(filterTransactionsDto: FilterTransactionsDto): Promise<Transaction[]> {
-        return this.transactionRepository.getTransactions(filterTransactionsDto);
+    async getTransactions(
+        filterTransactionsDto: FilterTransactionsDto,
+        accounts: Account
+    ): Promise<Transaction[]> {
+        return this.transactionRepository.getTransactions(filterTransactionsDto, accounts);
     }
    
-    async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto): Promise<Transaction> {
-        const transaction = await this.getTransactionById(id);
+    async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto, accounts): Promise<Transaction> {
+        const transaction = await this.getTransactionById(id, accounts);
         const { amount, type, title, note, tag, date, category_id, account_id } = updateTransactionDto;
+        var currentAccount;
 
+        for(let account of accounts) {
+            if(account.id == account_id) {
+                currentAccount = account;
+            }
+        }
+        
         transaction.amount = amount;
         transaction.type = type;
         transaction.title = title;
@@ -43,17 +66,34 @@ export class TransactionsService {
         transaction.tag = tag;
         transaction.date = date;
         transaction.category_id = category_id;
-        transaction.account_id = account_id;
+        if(currentAccount) {
+            transaction.account = currentAccount;
+        } else {
+            throw new BadRequestException("Transaction does not exist in the user account");
+        }
 
         await transaction.save();
         return transaction;
     }
 
-    async deleteTransaction(id: number): Promise<void> {
-        const result = await this.transactionRepository.delete(id);
+    async deleteTransaction(id: number, accounts): Promise<void> {
+        var transactionIds: number[] = [];
         
-        if(result.affected === 0) {
-            throw new NotFoundException(`Transaction not found to delete`);
+        for(let account of accounts) {
+            for(let transaction of account.transactions) {
+                transactionIds.push(transaction.id);
+            }
+        }
+
+        if(transactionIds.includes(id)) {
+
+            const result = await this.transactionRepository.delete(id);
+            
+            if(result.affected === 0) {
+                throw new NotFoundException(`Transaction not found to delete`);
+            }
+        } else {
+            throw new BadRequestException("Transaction id is not exists in the user accounts");
         }
     }
 }
