@@ -2,6 +2,7 @@ import { IsEmail } from "class-validator";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import { Account } from "src/accounts/account.entity";
+import { Category } from "src/categories/category.entity";
 
 @Entity()
 @Unique(['email'])
@@ -25,6 +26,9 @@ export class User extends BaseEntity {
 
     @OneToMany(type => Account, account => account.user, { eager: true })
     accounts: Account[];
+
+    @OneToMany(type => Category, category => category.user, { eager: true })
+    categories: Category[];
 
     async validatePassword(password: string): Promise<boolean> {
         const hash = await bcrypt.hash(password, this.salt);

@@ -1,5 +1,6 @@
+import { User } from "src/auth/user.entity";
 import { Type } from "src/type.enum";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 @Unique(['name'])
@@ -23,6 +24,6 @@ export class Category extends BaseEntity {
     @Column()
     color: string;
 
-    @Column()
-    user_id: number;
+    @ManyToOne(type => User, user => user.categories, { eager: false })
+    user: User;
 }

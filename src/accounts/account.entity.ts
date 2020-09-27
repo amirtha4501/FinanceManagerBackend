@@ -1,5 +1,6 @@
 import { User } from "src/auth/user.entity";
 import { Transaction } from "src/transactions/transaction.entity";
+import { Transfer } from "src/transfers/transfer.entity";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
@@ -26,4 +27,10 @@ export class Account extends BaseEntity {
 
     @OneToMany(type => Transaction, transaction => transaction.account, { eager: true })
     transactions: Transaction[]
+
+    @OneToMany(type => Transfer, transfer => transfer.from_account, { eager: true })
+    transfers_from: Transfer[]
+
+    @OneToMany(type => Transfer, transfer => transfer.to_account, { eager: true })
+    transfers_to: Transfer[]
 }
