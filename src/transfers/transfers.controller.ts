@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from 'src/accounts/get-account.decorator';
 import { CreateTransferDto } from './dto/create-transfer.dto';
 import { FilterTransferDto } from './dto/filter-transfer.dto';
+import { Transfer } from './transfer.entity';
 import { TransfersService } from './transfers.service';
 
 @Controller('transfers')
@@ -15,16 +16,16 @@ export class TransfersController {
     createTransfer(
         @Body() createTransferDto: CreateTransferDto,
         @GetAccount() accounts: Account
-    ) {
-        
+    ): Promise<Transfer> {
+        return this.transferService.createTransfer(createTransferDto, accounts);
     }
 
     @Get('/:id')
     getTransferById(
         @Param('id', ParseIntPipe) id: number,
         @GetAccount() accounts: Account
-    ) {
-    
+    ): Promise<Transfer> {
+        return this.transferService.getTransferById(id, accounts);
     }
 
     
@@ -33,7 +34,7 @@ export class TransfersController {
         @Query(ValidationPipe) filterTransferDto: FilterTransferDto,
         @GetAccount() accounts: Account
     ) {
-    
+        return this.transferService.getTransfers(filterTransferDto, accounts);
     }
    
     @Patch('/:id')

@@ -9,7 +9,7 @@ export class TransactionRepository extends Repository<Transaction> {
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts) {
         
-        const {  amount, type, title, note, tag, date, account_id, is_planned, category_id, recurring_payment_id } = createTransactionDto;
+        const { amount, type, title, note, tag, date, account_id, is_planned, category_id, recurring_payment_id } = createTransactionDto;
         var currentAccount;
         
         for(let account of accounts) {

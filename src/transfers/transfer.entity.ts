@@ -7,11 +7,11 @@ export class Transfer extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // @Column()
-    // from_account_id: number;
+    @Column({ type: "decimal", nullable: false })
+    amount: number;
 
-    // @Column()
-    // to_account_id: number;
+    @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
+    date?: Date;
 
     @ManyToOne(type => Account, account => account.transfers_from, { eager: false })
     from_account: Account;

@@ -5,8 +5,6 @@ export class CreateTransferDto {
     @IsNotEmpty({ message: 'amount should not be empty'})
     amount: number;
 
-    title: string;
-
     date: Date;
 
     @IsNotEmpty()
