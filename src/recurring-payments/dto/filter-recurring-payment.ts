@@ -1,9 +1,13 @@
 import { Type } from "src/type.enum";
 
-export class FilterTransactionsDto {
+export class FilterRecurringPaymentsDto {
     
     type: Type;
+
+    // title: string;
     
+    tag: string;
+
     categoryName: string;
     
     specifiedAccount: number;
@@ -12,9 +16,7 @@ export class FilterTransactionsDto {
     
     amountTo: number;
     
-    dateFrom;
+    dateFrom: Date;
 
-    dateTo;
-    
-    tag: string;
+    dateTo: Date;    
 }

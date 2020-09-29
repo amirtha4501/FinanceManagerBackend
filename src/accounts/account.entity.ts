@@ -1,4 +1,5 @@
 import { User } from "src/auth/user.entity";
+import { RecurringPayment } from "src/recurring-payments/recurring-payment.entity";
 import { Transaction } from "src/transactions/transaction.entity";
 import { Transfer } from "src/transfers/transfer.entity";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
@@ -27,6 +28,9 @@ export class Account extends BaseEntity {
 
     @OneToMany(type => Transaction, transaction => transaction.account, { eager: true })
     transactions: Transaction[]
+    
+    @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.account, { eager: true })
+    recurringPayments: RecurringPayment[]
 
     @OneToMany(type => Transfer, transfer => transfer.from_account, { eager: true })
     transfers_from: Transfer[]

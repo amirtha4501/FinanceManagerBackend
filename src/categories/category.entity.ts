@@ -1,9 +1,10 @@
 import { User } from "src/auth/user.entity";
+import { RecurringPayment } from "src/recurring-payments/recurring-payment.entity";
+import { Transaction } from "src/transactions/transaction.entity";
 import { Type } from "src/type.enum";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
-@Unique(['name'])
 export class Category extends BaseEntity {
     
     @PrimaryGeneratedColumn()
@@ -26,4 +27,10 @@ export class Category extends BaseEntity {
 
     @ManyToOne(type => User, user => user.categories, { eager: false })
     user: User;
+    
+    @OneToMany(type => Transaction, transaction => transaction.category, { eager: true })
+    transactions: Transaction[]
+    
+    @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.category, { eager: true })
+    recurringPayments: RecurringPayment[]
 }

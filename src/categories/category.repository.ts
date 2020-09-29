@@ -15,8 +15,12 @@ export class CategoryRepository extends Repository<Category> {
 
         const category = new Category();
         const parent = await this.findOne({ where: { name: parent_name} });
-         
-        category.name = name;
+        
+        if(!await this.findOne({where: {name: name, user: user}})) {
+            category.name = name;
+        } else {
+            throw new ConflictException("category new already exists");
+        }
         if(parent) {
             category.parent_id = parent.id;
         }
@@ -28,11 +32,7 @@ export class CategoryRepository extends Repository<Category> {
         try {
             await category.save();
         } catch (error) {
-            if(error.code === '23505') {
-                throw new ConflictException("category already exists");
-            } else {
-                throw new InternalServerErrorException();
-            }
+            throw new InternalServerErrorException();
         }
         return category;
     }

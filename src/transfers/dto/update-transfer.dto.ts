@@ -4,8 +4,6 @@ export class UpdateTransferDto {
     
     amount: number;
 
-    title: string;
-
     date: Date;
 
     @IsNotEmpty()

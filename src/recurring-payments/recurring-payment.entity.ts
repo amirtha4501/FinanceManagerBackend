@@ -1,8 +1,11 @@
+import { Account } from "src/accounts/account.entity";
+import { Category } from "src/categories/category.entity";
 import { Type } from "src/type.enum";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class RecurringPayment extends BaseEntity {
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -33,9 +36,9 @@ export class RecurringPayment extends BaseEntity {
     @Column()
     frequency: number;
 
-    @Column({ nullable: false})
-    category_id: number;
+    @ManyToOne(type => Account, account => account.recurringPayments, { eager: false })
+    account: Account;
 
-    @Column({ nullable: false })
-    account_id: number;
+    @ManyToOne(type => Category, category => category.recurringPayments, { eager: false })
+    category: Category;
 }

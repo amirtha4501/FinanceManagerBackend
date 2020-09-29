@@ -5,6 +5,7 @@ import { FilterTransactionsDto } from './dto/filter-transactions.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionRepository } from './transaction.repository';
 import { Transaction } from './transaction.entity';
+import { Category } from 'src/categories/category.entity';
 
 @Injectable()
 export class TransactionsService {
@@ -16,9 +17,10 @@ export class TransactionsService {
 
     async createTransaction(
         createTransactionDto: CreateTransactionDto,
-        accounts: Account    
+        accounts: Account,
+        categories: Category   
     ): Promise<Transaction> {
-        return this.transactionRepository.createTransaction(createTransactionDto, accounts);
+        return this.transactionRepository.createTransaction(createTransactionDto, accounts, categories);
     }
 
     async getTransactionById(id: number, accounts): Promise<Transaction> {
@@ -43,19 +45,27 @@ export class TransactionsService {
 
     async getTransactions(
         filterTransactionsDto: FilterTransactionsDto,
-        accounts: Account
+        accounts: Account,
+        categories: Category
     ): Promise<Transaction[]> {
-        return this.transactionRepository.getTransactions(filterTransactionsDto, accounts);
+        return this.transactionRepository.getTransactions(filterTransactionsDto, accounts, categories);
     }
    
-    async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto, accounts): Promise<Transaction> {
+    async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto, accounts, categories): Promise<Transaction> {
         const transaction = await this.getTransactionById(id, accounts);
         const { amount, type, title, note, tag, date, category_id, account_id } = updateTransactionDto;
         var currentAccount;
+        var currentCategory;
 
         for(let account of accounts) {
             if(account.id == account_id) {
                 currentAccount = account;
+            }
+        }
+
+        for(let category of categories) {
+            if(category.id == category_id) {
+                currentCategory = category;
             }
         }
         
@@ -65,7 +75,12 @@ export class TransactionsService {
         transaction.note = note;
         transaction.tag = tag;
         transaction.date = date;
-        transaction.category_id = category_id;
+        
+        if(currentCategory) {
+            transaction.category = currentCategory;
+        } else {
+            throw new BadRequestException("Category does not exists");
+        }
         if(currentAccount) {
             transaction.account = currentAccount;
         } else {
@@ -86,7 +101,6 @@ export class TransactionsService {
         }
 
         if(transactionIds.includes(id)) {
-
             const result = await this.transactionRepository.delete(id);
             
             if(result.affected === 0) {

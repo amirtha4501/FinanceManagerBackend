@@ -6,19 +6,24 @@ import { FilterTransactionsDto } from './dto/filter-transactions.dto';
 import { Transaction } from './transaction.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from 'src/accounts/get-account.decorator';
+import { GetCategory } from 'src/categories/get-category.decorator';
+import { Category } from 'src/categories/category.entity';
 
 @Controller('transactions')
 @UseGuards(AuthGuard())
 export class TransactionsController {
+    
     constructor(private transactionsService: TransactionsService) {}
 
     @Post()
     @UsePipes(ValidationPipe)
     createTransaction(
         @Body() createTransactionDto: CreateTransactionDto,
-        @GetAccount() accounts: Account
+        @GetAccount() accounts: Account,
+        @GetCategory() categories: Category
     ): Promise<Transaction> {
-        return this.transactionsService.createTransaction(createTransactionDto, accounts);
+        console.log(categories);
+        return this.transactionsService.createTransaction(createTransactionDto, accounts, categories);
     }
 
     @Get('/:id')
@@ -32,18 +37,20 @@ export class TransactionsController {
     @Get()
     getTransactions(
         @Query(ValidationPipe) filterTransactionsDto: FilterTransactionsDto,
-        @GetAccount() accounts: Account
+        @GetAccount() accounts: Account,
+        @GetCategory() categories: Category
     ): Promise<Transaction[]> {
-        return this.transactionsService.getTransactions(filterTransactionsDto, accounts);
+        return this.transactionsService.getTransactions(filterTransactionsDto, accounts, categories);
     }
    
     @Patch('/:id')
     updateTransaction(
         @Param('id', ParseIntPipe) id: number, 
         @Body(ValidationPipe) updateTransactionDto: UpdateTransactionDto,
-        @GetAccount() accounts: Account
-    ): Promise<Transaction> {
-        return this.transactionsService.updateTransaction(id, updateTransactionDto, accounts);
+        @GetAccount() accounts: Account,
+        @GetCategory() categories: Category
+        ): Promise<Transaction> {
+        return this.transactionsService.updateTransaction(id, updateTransactionDto, accounts, categories);
     }
 
     @Delete('/:id') 

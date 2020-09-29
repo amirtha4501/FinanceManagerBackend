@@ -7,14 +7,21 @@ import { Transaction } from "./transaction.entity";
 @EntityRepository(Transaction)
 export class TransactionRepository extends Repository<Transaction> {
 
-    async createTransaction(createTransactionDto: CreateTransactionDto, accounts) {
+    async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
         
-        const { amount, type, title, note, tag, date, account_id, is_planned, category_id, recurring_payment_id } = createTransactionDto;
+        const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
         var currentAccount;
+        var currentCategory;
         
         for(let account of accounts) {
             if(account.id == account_id) {
                 currentAccount = account;
+            }
+        }
+
+        for(let category of categories) {
+            if(category.id == category_id) {
+                currentCategory = category;
             }
         }
 
@@ -27,13 +34,17 @@ export class TransactionRepository extends Repository<Transaction> {
         transaction.tag = tag,  
         transaction.date = date,  
         transaction.is_planned = is_planned,  
-        transaction.category_id = category_id,  
         transaction.recurring_payment_id = recurring_payment_id;
         
-        if(currentAccount) {
+        if(currentAccount && currentCategory) {
             transaction.account = currentAccount; 
+            transaction.category = currentCategory  
         } else {
-            throw new BadRequestException("Account does not exist in the user account");
+            if(!currentAccount) {
+                throw new BadRequestException("Account does not exist in the user account");
+            } else {
+                throw new BadRequestException("Category does not exist in the user account");
+            }
         }
 
         await transaction.save();
@@ -41,25 +52,32 @@ export class TransactionRepository extends Repository<Transaction> {
         return transaction;
     }
 
-    async getTransactions(filterTransactionsDto: FilterTransactionsDto, accounts): Promise<Transaction[]> {
-        const { type, category, specifiedAccount, dateFrom, dateTo, amountFrom, amountTo, tag } = filterTransactionsDto;
+    async getTransactions(filterTransactionsDto: FilterTransactionsDto, accounts, categories): Promise<Transaction[]> {
+        
+        const { type, categoryName, specifiedAccount, dateFrom, dateTo, amountFrom, amountTo, tag } = filterTransactionsDto;
         const query = this.createQueryBuilder('transaction');
         var ids: number[] = [];
+        var categoryId: number;
         
         for(let account of accounts) {
             ids.push(account.id);
         }
 
-        if(!type && !category && !amountFrom && !amountTo && !dateFrom && !dateTo && !tag) {
-            query.where('transaction.account IN (:...ids)', { ids });
+        for(let category of categories) {
+            if(category.name == categoryName) {
+                categoryId = category.id;
+            }
         }
 
         if(!specifiedAccount) {
+            if(!type && !categoryName && !amountFrom && !amountTo && !dateFrom && !dateTo && !tag) {
+                query.where('transaction.account IN (:...ids)', { ids });
+            }
             if(type) {
                 query.andWhere('transaction.type = :type AND transaction.account IN (:...ids)', { type, ids });
             }
-            if(category) {
-                query.andWhere('transaction.category = :category AND transaction.account IN (:...ids)', { category, ids });
+            if(categoryName) {
+                query.andWhere('transaction.category = :categoryId AND transaction.account IN (:...ids)', { categoryId, ids });
             }
             if(amountFrom && amountTo) {
                 query.andWhere('transaction.amount >= :amountFrom AND transaction.amount <= :amountTo AND transaction.account IN (:...ids)', { amountFrom, amountTo, ids });
@@ -73,7 +91,25 @@ export class TransactionRepository extends Repository<Transaction> {
         }
 
         if(specifiedAccount) {
-            query.where('transaction.account = :specifiedAccount', { specifiedAccount });
+
+            if(!type && !categoryName && !amountFrom && !amountTo && !dateFrom && !dateTo && !tag) {
+                query.where('transaction.account = :specifiedAccount', { specifiedAccount });
+            }
+            if(type) {
+                query.andWhere('transaction.type = :type AND transaction.account = :specifiedAccount', { type, specifiedAccount });
+            }
+            if(categoryName) {
+                query.andWhere('transaction.category = :categoryId AND transaction.account = :specifiedAccount', { categoryId, specifiedAccount });
+            }
+            if(amountFrom && amountTo) {
+                query.andWhere('transaction.amount >= :amountFrom AND transaction.amount <= :amountTo AND transaction.account = :specifiedAccount', { amountFrom, amountTo, specifiedAccount });
+            }
+            if(dateFrom && dateTo) {
+                query.andWhere('transaction.date BETWEEN :dateFrom AND :dateTo AND transaction.account = :specifiedAccount', { dateFrom, dateTo, specifiedAccount });
+            }
+            if(tag) {
+                query.andWhere('transaction.tag LIKE :tag AND transaction.account = :specifiedAccount', { tag: `%${tag}%`, specifiedAccount });
+            }    
         }
         
         const transactions = await query.getMany();
