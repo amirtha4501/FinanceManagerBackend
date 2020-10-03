@@ -1,5 +1,5 @@
 import { User } from "src/auth/user.entity";
-import { RecurringPayment } from "src/recurring-payments/recurring-payment.entity";
+// import { RecurringPayment } from "src/recurring-payments/recurring-payment.entity";
 import { Transaction } from "src/transactions/transaction.entity";
 import { Type } from "src/type.enum";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
@@ -31,6 +31,6 @@ export class Category extends BaseEntity {
     @OneToMany(type => Transaction, transaction => transaction.category, { eager: true })
     transactions: Transaction[]
     
-    @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.category, { eager: true })
-    recurringPayments: RecurringPayment[]
+    // @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.category, { eager: true })
+    // recurringPayments: RecurringPayment[]
 }

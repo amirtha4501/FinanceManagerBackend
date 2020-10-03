@@ -14,12 +14,12 @@ export class CategoryRepository extends Repository<Category> {
         const { name, parent_name, starred, type, color } = createCategoryDto;
 
         const category = new Category();
-        const parent = await this.findOne({ where: { name: parent_name} });
+        const parent = await this.findOne({ where: { name: parent_name, user: user} });
         
         if(!await this.findOne({where: {name: name, user: user}})) {
             category.name = name;
         } else {
-            throw new ConflictException("category new already exists");
+            throw new ConflictException("category name already exists");
         }
         if(parent) {
             category.parent_id = parent.id;
@@ -36,4 +36,16 @@ export class CategoryRepository extends Repository<Category> {
         }
         return category;
     }
+
+    async getCategories(user: User): Promise<Category[]> {
+        const query = this.createQueryBuilder('category');
+        
+        console.log(user.id);
+        const userId = user.id;
+        query.andWhere('category.user = :userId', { userId });
+       
+        const categories = await query.getMany();
+        return categories;
+    }
+
 }

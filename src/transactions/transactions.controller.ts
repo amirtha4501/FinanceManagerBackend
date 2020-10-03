@@ -49,7 +49,7 @@ export class TransactionsController {
         @Body(ValidationPipe) updateTransactionDto: UpdateTransactionDto,
         @GetAccount() accounts: Account,
         @GetCategory() categories: Category
-        ): Promise<Transaction> {
+    ): Promise<Transaction> {
         return this.transactionsService.updateTransaction(id, updateTransactionDto, accounts, categories);
     }
 

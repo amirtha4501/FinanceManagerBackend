@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TransfersModule } from './transfers/transfers.module';
-import { RecurringPaymentsModule } from './recurring-payments/recurring-payments.module';
+// import { RecurringPaymentsModule } from './recurring-payments/recurring-payments.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { RecurringPaymentsModule } from './recurring-payments/recurring-payments
     AccountsModule,
     CategoriesModule,
     TransfersModule,
-    RecurringPaymentsModule,
+    // RecurringPaymentsModule,
   ],
   controllers: [],
   providers: [],

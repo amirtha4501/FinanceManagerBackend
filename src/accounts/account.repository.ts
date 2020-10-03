@@ -16,19 +16,21 @@ export class AccountRepository extends Repository<Account> {
 
         const account = new Account();
 
-        account.name = name;
         account.user = user;
 
+        if(!await this.findOne({where: {name: name, user: user}})) {
+            account.name = name;
+        } else {
+            throw new ConflictException("account name already exists");
+        }
+
         console.log(user);
+        
         try {
             await account.save();
             delete account.user; 
         } catch (error) {
-            if(error.code === '23505') {
-                throw new ConflictException("account name already exists");
-            } else {
-                throw new InternalServerErrorException();
-            }
+            throw new InternalServerErrorException();
         }
         return account;
     }

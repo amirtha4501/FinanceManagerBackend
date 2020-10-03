@@ -1,4 +1,3 @@
-import { IsNotEmpty } from "class-validator";
 import { Account } from "src/accounts/account.entity";
 import { Category } from "src/categories/category.entity";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne } from "typeorm";

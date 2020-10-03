@@ -1,15 +1,16 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CategoriesService } from './categories.service';
 import { Category } from './category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
 @UseGuards(AuthGuard())
 export class CategoriesController {
-     
+    
     constructor(
         private categoriesService: CategoriesService
     ) {}
@@ -29,5 +30,29 @@ export class CategoriesController {
         @GetUser() user: User 
     ): Promise<Category> {
         return this.categoriesService.getCategoryById(id, user);
+    }
+
+    @Get()
+    getCategories(
+        @GetUser() user: User    
+    ): Promise<Category[]> {
+        return this.categoriesService.getCategories(user);
+    }
+
+    @Patch('/:id')
+    updateCategory(
+        @Param('id', ParseIntPipe) id: number, 
+        @Body() updateCategoryDto: UpdateCategoryDto,
+        @GetUser() user: User    
+    ): Promise<Category> {
+        return this.categoriesService.updateCategory(id, updateCategoryDto, user);
+    }
+    
+    @Delete('/:id') 
+    deleteCategory(
+        @Param('id', ParseIntPipe) id: number,
+        @GetUser() user: User    
+    ): Promise<void> {
+        return this.categoriesService.deleteCategory(id, user);
     }
 }

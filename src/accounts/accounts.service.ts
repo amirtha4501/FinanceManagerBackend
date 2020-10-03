@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountRepository } from './account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -42,9 +42,14 @@ export class AccountsService {
         const account = await this.getAccountById(id, user);
         const { current_amount, date, name } = updateAccountDto;
 
+        if(!await this.accountRepository.findOne({where: {name: name, user: user}})) {
+            account.name = name;
+        } else {
+            throw new ConflictException("Account name already exists");
+        }
+
         account.current_amount = current_amount;
         account.date = date;
-        account.name = name;
 
         await account.save();
         return account;

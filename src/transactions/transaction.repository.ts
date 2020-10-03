@@ -1,4 +1,5 @@
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { id } from "date-fns/locale";
 import { Repository, EntityRepository } from "typeorm";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { FilterTransactionsDto } from "./dto/filter-transactions.dto";
@@ -15,12 +16,14 @@ export class TransactionRepository extends Repository<Transaction> {
         
         for(let account of accounts) {
             if(account.id == account_id) {
+                console.log(account.name);
                 currentAccount = account;
             }
         }
 
         for(let category of categories) {
             if(category.id == category_id) {
+                console.log(category.name);
                 currentCategory = category;
             }
         }
@@ -91,6 +94,19 @@ export class TransactionRepository extends Repository<Transaction> {
         }
 
         if(specifiedAccount) {
+
+            var accountPresent: boolean;
+
+            for(let id of ids) {
+                if(id == specifiedAccount) {
+                    accountPresent = true; 
+                    console.log("start here");
+                }
+            }
+            
+            if(!accountPresent) {
+                throw new NotFoundException("Specified account doesn't exist");
+            }
 
             if(!type && !categoryName && !amountFrom && !amountTo && !dateFrom && !dateTo && !tag) {
                 query.where('transaction.account = :specifiedAccount', { specifiedAccount });

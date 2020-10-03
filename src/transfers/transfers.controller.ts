@@ -29,9 +29,8 @@ export class TransfersController {
         return this.transferService.getTransferById(id, accounts);
     }
 
-    
     @Get()
-    getTransfer(
+    getTransfers(
         @Query(ValidationPipe) filterTransferDto: FilterTransferDto,
         @GetAccount() accounts: Account
     ) {
