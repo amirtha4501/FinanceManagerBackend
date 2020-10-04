@@ -55,6 +55,5 @@ export class AccountsController {
         @GetUser() user: User    
     ): Promise<void> {
         return this.accountsService.deleteAccount(id, user);
-    }
-   
+    }   
 }

@@ -44,9 +44,9 @@ export class TransactionRepository extends Repository<Transaction> {
             transaction.category = currentCategory  
         } else {
             if(!currentAccount) {
-                throw new BadRequestException("Account does not exist in the user account");
+                throw new BadRequestException("Account does not exist");
             } else {
-                throw new BadRequestException("Category does not exist in the user account");
+                throw new BadRequestException("Category does not exist");
             }
         }
 
@@ -100,7 +100,6 @@ export class TransactionRepository extends Repository<Transaction> {
             for(let id of ids) {
                 if(id == specifiedAccount) {
                     accountPresent = true; 
-                    console.log("start here");
                 }
             }
             

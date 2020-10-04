@@ -26,7 +26,6 @@ export class TransfersService {
         var transferIds: number[] = [];
         
         for(let account of accounts) {
-            console.log(account);
             for(let transfer of account.transfers_from) {
                 transferIds.push(transfer.id);
             }
@@ -42,7 +41,7 @@ export class TransfersService {
             }
             return found
         } else {
-            throw new BadRequestException("Transfer id is not exists in the user accounts");
+            throw new BadRequestException("Transfer id is not exists");
         }
     }
 
@@ -58,6 +57,10 @@ export class TransfersService {
         const { amount, date, from_account_id, to_account_id } = updateTransferDto;
         var fromAccount;
         var toAccount;
+
+        if(from_account_id == to_account_id) {
+            throw new BadRequestException("From and to account id should not be same");
+        }
 
         for(let account of accounts) {
             if(account.id == from_account_id) {
@@ -75,7 +78,12 @@ export class TransfersService {
             transfer.from_account = fromAccount;
             transfer.to_account = toAccount;
         } else {
-            throw new BadRequestException("Transfer does not exist in the user account");
+            if(!fromAccount) {
+                throw new BadRequestException("From account id does not exist");
+            }
+            if(!toAccount) {
+                throw new BadRequestException("To account id does not exist");
+            }
         }
 
         await transfer.save();
@@ -102,7 +110,7 @@ export class TransfersService {
                 throw new NotFoundException(`Transfer not found to delete`);
             }
         } else {
-            throw new BadRequestException("Transfer id is not exists in the user accounts");
+            throw new BadRequestException("Transfer id not exists");
         }
     }
 }

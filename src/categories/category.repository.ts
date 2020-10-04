@@ -39,8 +39,7 @@ export class CategoryRepository extends Repository<Category> {
 
     async getCategories(user: User): Promise<Category[]> {
         const query = this.createQueryBuilder('category');
-        
-        console.log(user.id);
+
         const userId = user.id;
         query.andWhere('category.user = :userId', { userId });
        

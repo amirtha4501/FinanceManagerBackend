@@ -25,12 +25,13 @@ export class Category extends BaseEntity {
     @Column()
     color: string;
 
-    @ManyToOne(type => User, user => user.categories, { eager: false })
+    @ManyToOne(type => User, user => user.categories, { eager: false, onDelete: 'CASCADE' })
     user: User;
     
-    @OneToMany(type => Transaction, transaction => transaction.category, { eager: true })
+    @OneToMany(type => Transaction, transaction => transaction.category, { eager: true, cascade: true })
     transactions: Transaction[]
     
     // @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.category, { eager: true })
     // recurringPayments: RecurringPayment[]
 }
+// cascade: true, ondelete: set default

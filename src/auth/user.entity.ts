@@ -24,10 +24,10 @@ export class User extends BaseEntity {
     @Column()
     salt: string;
 
-    @OneToMany(type => Account, account => account.user, { eager: true })
+    @OneToMany(type => Account, account => account.user, { eager: true, cascade: true })
     accounts: Account[];
 
-    @OneToMany(type => Category, category => category.user, { eager: true })
+    @OneToMany(type => Category, category => category.user, { eager: true, cascade: true })
     categories: Category[];
 
     async validatePassword(password: string): Promise<boolean> {

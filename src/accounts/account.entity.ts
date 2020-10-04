@@ -1,5 +1,4 @@
 import { User } from "src/auth/user.entity";
-// import { RecurringPayment } from "src/recurring-payments/recurring-payment.entity";
 import { Transaction } from "src/transactions/transaction.entity";
 import { Transfer } from "src/transfers/transfer.entity";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
@@ -22,18 +21,15 @@ export class Account extends BaseEntity {
     @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
     date?: Date;
 
-    @ManyToOne(type => User, user => user.accounts, { eager: false })
+    @ManyToOne(type => User, user => user.accounts, { eager: false, onDelete: 'CASCADE' })
     user: User;
 
-    @OneToMany(type => Transaction, transaction => transaction.account, { eager: true })
+    @OneToMany(type => Transaction, transaction => transaction.account, { eager: true, cascade: true })
     transactions: Transaction[]
-    
-    // @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.account, { eager: true })
-    // recurringPayments: RecurringPayment[]
 
-    @OneToMany(type => Transfer, transfer => transfer.from_account, { eager: true })
+    @OneToMany(type => Transfer, transfer => transfer.from_account, { eager: true, cascade: true })
     transfers_from: Transfer[]
 
-    @OneToMany(type => Transfer, transfer => transfer.to_account, { eager: true })
+    @OneToMany(type => Transfer, transfer => transfer.to_account, { eager: true, cascade: true })
     transfers_to: Transfer[]
 }

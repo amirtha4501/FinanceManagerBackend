@@ -13,6 +13,10 @@ export class TransferRepository extends Repository<Transfer> {
         var fromAccount;
         var toAccount;
         
+        if(from_account_id == to_account_id) {
+            throw new BadRequestException("From and to account should not be same");
+        }
+
         for(let account of accounts) {
             if(account.id == from_account_id) {
                 fromAccount = account;
@@ -31,7 +35,7 @@ export class TransferRepository extends Repository<Transfer> {
             transfer.from_account = fromAccount.id;  
             transfer.to_account = toAccount.id;
         } else {
-            throw new BadRequestException("Account does not exist in the user account");
+            throw new BadRequestException("Account does not exist");
         }
         
         await transfer.save();

@@ -1,9 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthSignInDto } from './dto/auth.signin.dto';
 import { AuthSignUpDto } from './dto/auth.signup.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtPayload } from './jwt-payload.interface';
+import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -30,5 +32,40 @@ export class AuthService {
         const accessToken = await this.jwtService.sign(payload);
 
         return { accessToken };
+    }
+
+    async getUserById(user: User): Promise<User> {
+        console.log("getting", user);
+        return user;
+    }
+
+    async updateUser(updateUserDto: UpdateUserDto, user: User): Promise<User> {
+        
+        const { name, email } = updateUserDto;
+        
+        user.name = name;
+
+        if(await this.userRepository.findOne({ where: { email: email } })) {
+            throw new ConflictException("email already exists");
+        }
+        user.email = email;
+        
+        try {
+            await user.save();
+        } catch {
+            throw new BadRequestException("update failed");
+        }
+
+        return user;
+    }
+
+    async deleteUser(user: User): Promise<void> {
+
+        console.log(user.id);
+        const result = await this.userRepository.delete(user.id);
+        
+        if(result.affected === 0) {
+            throw new NotFoundException(`User not found to delete`);
+        }
     }
 }

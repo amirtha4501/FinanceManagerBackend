@@ -22,7 +22,6 @@ export class TransactionsController {
         @GetAccount() accounts: Account,
         @GetCategory() categories: Category
     ): Promise<Transaction> {
-        console.log(categories);
         return this.transactionsService.createTransaction(createTransactionDto, accounts, categories);
     }
 

@@ -33,9 +33,9 @@ export class Transaction extends BaseEntity {
     @Column({ nullable: true })
     recurring_payment_id: number;
 
-    @ManyToOne(type => Account, account => account.transactions, { eager: false })
+    @ManyToOne(type => Account, account => account.transactions, { eager: false, onDelete: 'CASCADE' })
     account: Account;
    
-    @ManyToOne(type => Category, category => category.transactions, { eager: false })
+    @ManyToOne(type => Category, category => category.transactions, { eager: false, onDelete: "SET NULL" })
     category: Category;
 }

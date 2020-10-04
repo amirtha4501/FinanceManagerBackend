@@ -23,8 +23,6 @@ export class AccountRepository extends Repository<Account> {
         } else {
             throw new ConflictException("account name already exists");
         }
-
-        console.log(user);
         
         try {
             await account.save();

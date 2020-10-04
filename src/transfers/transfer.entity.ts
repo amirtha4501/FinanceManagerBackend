@@ -13,9 +13,9 @@ export class Transfer extends BaseEntity {
     @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
     date?: Date;
 
-    @ManyToOne(type => Account, account => account.transfers_from, { eager: false })
+    @ManyToOne(type => Account, account => account.transfers_from, { eager: false, onDelete: 'CASCADE' })
     from_account: Account;
 
-    @ManyToOne(type => Account, account => account.transfers_to, { eager: false })
+    @ManyToOne(type => Account, account => account.transfers_to, { eager: false, onDelete: 'CASCADE' })
     to_account: Account;
 }
