@@ -21,7 +21,6 @@ export class AccountsController {
         @Body() createAccountDto: CreateAccountDto,
         @GetUser() user: User    
     ): Promise<Account> {
-        console.log(user, "he");
         return this.accountsService.createAccount(createAccountDto, user);
     }
     
@@ -36,7 +35,7 @@ export class AccountsController {
     @Get()
     getAccounts(
         @GetUser() user: User    
-        ): Promise<Account[]> {
+    ): Promise<Account[]> {
         return this.accountsService.getAccounts(user);
     }
 

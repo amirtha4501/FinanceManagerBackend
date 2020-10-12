@@ -12,11 +12,12 @@ export class AccountRepository extends Repository<Account> {
         user: User
     ): Promise<Account> {
 
-        const { name } = createAccountDto;
+        const { name, current_amount } = createAccountDto;
 
         const account = new Account();
 
         account.user = user;
+        account.current_amount = current_amount;
 
         if(!await this.findOne({where: {name: name, user: user}})) {
             account.name = name;
@@ -36,7 +37,6 @@ export class AccountRepository extends Repository<Account> {
     async getAccounts(user: User): Promise<Account[]> {
         const query = this.createQueryBuilder('account');
         
-        console.log(user.id);
         const userId = user.id;
         query.andWhere('account.user = :userId', { userId });
        

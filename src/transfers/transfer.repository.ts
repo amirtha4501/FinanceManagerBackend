@@ -1,4 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
+import { Account } from "src/accounts/account.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateTransferDto } from "./dto/create-transfer.dto";
 import { FilterTransferDto } from "./dto/filter-transfer.dto";
@@ -12,7 +13,7 @@ export class TransferRepository extends Repository<Transfer> {
         const { amount, date, from_account_id, to_account_id } = createTransferDto;
         var fromAccount;
         var toAccount;
-        
+       
         if(from_account_id == to_account_id) {
             throw new BadRequestException("From and to account should not be same");
         }
@@ -34,10 +35,20 @@ export class TransferRepository extends Repository<Transfer> {
         if(fromAccount && toAccount) {
             transfer.from_account = fromAccount.id;  
             transfer.to_account = toAccount.id;
+            
+            fromAccount.current_amount -= amount;              
+            toAccount.current_amount = +toAccount.current_amount + +amount;
         } else {
-            throw new BadRequestException("Account does not exist");
+            if(!fromAccount) {
+                throw new BadRequestException("From account id does not exist");
+            }
+            if(!toAccount) {
+                throw new BadRequestException("To account id does not exist");
+            }
         }
-        
+
+        await fromAccount.save();
+        await toAccount.save();
         await transfer.save();
 
         return transfer;

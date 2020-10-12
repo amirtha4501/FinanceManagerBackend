@@ -34,4 +34,3 @@ export class Category extends BaseEntity {
     // @OneToMany(type => RecurringPayment, recurringPayment => recurringPayment.category, { eager: true })
     // recurringPayments: RecurringPayment[]
 }
-// cascade: true, ondelete: set default

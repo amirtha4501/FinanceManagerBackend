@@ -76,7 +76,10 @@ export class TransfersService {
 
         if(fromAccount && toAccount) {
             transfer.from_account = fromAccount;
-            transfer.to_account = toAccount;
+            transfer.to_account = toAccount; 
+
+            fromAccount.current_amount -= amount;              
+            toAccount.current_amount = +toAccount.current_amount + +amount;
         } else {
             if(!fromAccount) {
                 throw new BadRequestException("From account id does not exist");
@@ -86,7 +89,10 @@ export class TransfersService {
             }
         }
 
+        await fromAccount.save();
+        await toAccount.save();
         await transfer.save();
+        
         return transfer;
     }
 

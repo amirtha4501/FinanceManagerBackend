@@ -35,7 +35,6 @@ export class AuthService {
     }
 
     async getUserById(user: User): Promise<User> {
-        console.log("getting", user);
         return user;
     }
 
@@ -61,7 +60,6 @@ export class AuthService {
 
     async deleteUser(user: User): Promise<void> {
 
-        console.log(user.id);
         const result = await this.userRepository.delete(user.id);
         
         if(result.affected === 0) {
