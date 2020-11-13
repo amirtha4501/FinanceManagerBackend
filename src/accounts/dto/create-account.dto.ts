@@ -8,6 +8,7 @@ export class CreateAccountDto {
 
     current_amount: number;
 
+    date: Date;
     // planned_amount: number;
 
 }

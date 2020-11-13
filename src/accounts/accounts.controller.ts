@@ -49,7 +49,7 @@ export class AccountsController {
     }
     
     @Delete('/:id') 
-    deleteTransaction(
+    deleteAccount(
         @Param('id', ParseIntPipe) id: number,
         @GetUser() user: User    
     ): Promise<void> {

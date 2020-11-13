@@ -1,5 +1,4 @@
 import { BadRequestException } from "@nestjs/common";
-import { Account } from "src/accounts/account.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateTransferDto } from "./dto/create-transfer.dto";
 import { FilterTransferDto } from "./dto/filter-transfer.dto";
@@ -30,6 +29,7 @@ export class TransferRepository extends Repository<Transfer> {
         const transfer = new Transfer(); 
         
         transfer.amount = amount;  
+        transfer.transferred_amount = amount;
         transfer.date = date;
 
         if(fromAccount && toAccount) {

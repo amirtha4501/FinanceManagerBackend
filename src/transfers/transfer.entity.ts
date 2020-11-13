@@ -10,6 +10,9 @@ export class Transfer extends BaseEntity {
     @Column({ type: "decimal", nullable: false })
     amount: number;
 
+    @Column({ type: "decimal", default: 0})
+    transferred_amount: number;
+
     @Column('date', { name: 'date', default: (): string => 'LOCALTIMESTAMP' })
     date?: Date;
 

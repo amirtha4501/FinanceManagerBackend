@@ -12,12 +12,16 @@ export class AccountRepository extends Repository<Account> {
         user: User
     ): Promise<Account> {
 
-        const { name, current_amount } = createAccountDto;
+        const { name, current_amount, date } = createAccountDto;
 
         const account = new Account();
 
         account.user = user;
         account.current_amount = current_amount;
+        
+        if(date) {
+            account.date = date;
+        }
 
         if(!await this.findOne({where: {name: name, user: user}})) {
             account.name = name;
