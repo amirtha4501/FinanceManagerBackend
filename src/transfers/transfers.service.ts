@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateAccountDto } from 'src/accounts/dto/update-account.dto';
 import { CreateTransferDto } from './dto/create-transfer.dto';
 import { FilterTransferDto } from './dto/filter-transfer.dto';
 import { UpdateTransferDto } from './dto/update-transfer.dto';

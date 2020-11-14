@@ -7,7 +7,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
+import { AccountsService } from 'src/accounts/accounts.service';
 import * as bcrypt from 'bcrypt';
+import { AccountRepository } from 'src/accounts/account.repository';
+import { CreateAccountDto } from 'src/accounts/dto/create-account.dto';
+import { Account } from 'src/accounts/account.entity';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +21,11 @@ export class AuthService {
         private userRepository: UserRepository,
         private jwtService: JwtService
     ) {}
+
+    createDefaultAccount(user: User) {
+        console.log("get accounts " + user);
+        // console.log(this.accountService.temp() + "obtained");
+    }
 
     async signUp(authSignUpDto: AuthSignUpDto): Promise<{ accessToken: string }> {
         const { name, email, password } = authSignUpDto;
@@ -29,7 +38,12 @@ export class AuthService {
         
         try {
             await user.save();
-            return this.signIn({email, password});
+            console.log("user signed up")
+            const accessToken = this.signIn({email, password});
+            console.log("user signed in")
+            this.createDefaultAccount(user);
+            console.log("user created account")
+            return accessToken;
         } catch(error) {
             if(error.code === '23505') {
                 throw new ConflictException("email already exists");

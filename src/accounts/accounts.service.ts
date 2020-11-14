@@ -14,6 +14,10 @@ export class AccountsService {
         private accountRepository: AccountRepository
     ) {}
 
+    temp() {
+        console.log("Account service temp method");
+    }
+
     async createAccount(
         createAccountDto: CreateAccountDto,
         user: User

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, ExecutionContext, forwardRef, Get, Inject, Param, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthSignInDto } from './dto/auth.signin.dto';
@@ -16,7 +16,8 @@ export class AuthController {
 
     @Post('/signup')
     signUp(@Body(ValidationPipe) authSignUpDto: AuthSignUpDto): Promise<{ accessToken: string }> {
-        return this.authService.signUp(authSignUpDto);
+        const accessToken = this.authService.signUp(authSignUpDto);
+        return accessToken;
     }
 
     @Post('/signin')
