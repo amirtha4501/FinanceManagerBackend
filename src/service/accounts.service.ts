@@ -1,10 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountRepository } from './account.repository';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { Account } from './account.entity';
-import { UpdateAccountDto } from './dto/update-account.dto';
-import { User } from 'src/auth/user.entity';
+import { AccountRepository } from '../repository/account.repository';
+import { CreateAccountDto } from '../dto/create-account.dto';
+import { Account } from '../entity/account.entity';
+import { UpdateAccountDto } from '../dto/update-account.dto';
+import { User } from 'src/entity/user.entity';
 
 @Injectable()
 export class AccountsService {

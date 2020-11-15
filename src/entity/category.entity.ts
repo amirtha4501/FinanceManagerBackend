@@ -1,5 +1,5 @@
-import { User } from "src/auth/user.entity";
-import { Transaction } from "src/transactions/transaction.entity";
+import { User } from "src/entity/user.entity";
+import { Transaction } from "src/entity/transaction.entity";
 import { Type } from "src/type.enum";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 

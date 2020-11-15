@@ -1,6 +1,6 @@
-import { User } from "src/auth/user.entity";
-import { Transaction } from "src/transactions/transaction.entity";
-import { Transfer } from "src/transfers/transfer.entity";
+import { User } from "src/entity/user.entity";
+import { Transaction } from "src/entity/transaction.entity";
+import { Transfer } from "src/entity/transfer.entity";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()

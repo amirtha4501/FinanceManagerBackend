@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { GetAccount } from 'src/accounts/get-account.decorator';
-import { CreateTransferDto } from './dto/create-transfer.dto';
-import { FilterTransferDto } from './dto/filter-transfer.dto';
-import { UpdateTransferDto } from './dto/update-transfer.dto';
-import { Transfer } from './transfer.entity';
-import { TransfersService } from './transfers.service';
+import { GetAccount } from 'src/decorator/get-account.decorator';
+import { CreateTransferDto } from '../dto/create-transfer.dto';
+import { FilterTransferDto } from '../dto/filter-transfer.dto';
+import { UpdateTransferDto } from '../dto/update-transfer.dto';
+import { Transfer } from '../entity/transfer.entity';
+import { TransfersService } from '../service/transfers.service';
 
 @Controller('transfers')
 @UseGuards(AuthGuard())

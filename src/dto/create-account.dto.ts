@@ -1,5 +1,5 @@
 import { IsNotEmpty } from "class-validator";
-import { User } from "src/auth/user.entity";
+import { User } from "src/entity/user.entity";
 
 export class CreateAccountDto {
        

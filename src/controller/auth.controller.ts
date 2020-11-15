@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, ExecutionContext, forwardRef, Get, Inject, Param, ParseIntPipe, Patch, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { AuthSignInDto } from './dto/auth.signin.dto';
-import { AuthSignUpDto } from './dto/auth.signup.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUser } from './get-user.decorator';
-import { User } from './user.entity';
+import { AuthService } from '../service/auth.service';
+import { AuthSignInDto } from '../dto/auth.signin.dto';
+import { AuthSignUpDto } from '../dto/auth.signup.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { GetUser } from '../decorator/get-user.decorator';
+import { User } from '../entity/user.entity';
 
 @Controller('auth')
 export class AuthController {

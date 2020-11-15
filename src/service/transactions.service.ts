@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { FilterTransactionsDto } from './dto/filter-transactions.dto';
+import { CreateTransactionDto } from '../dto/create-transaction.dto';
+import { UpdateTransactionDto } from '../dto/update-transaction.dto';
+import { FilterTransactionsDto } from '../dto/filter-transactions.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TransactionRepository } from './transaction.repository';
-import { Transaction } from './transaction.entity';
-import { Category } from 'src/categories/category.entity';
+import { TransactionRepository } from '../repository/transaction.repository';
+import { Transaction } from '../entity/transaction.entity';
+import { Category } from 'src/entity/category.entity';
 
 @Injectable()
 export class TransactionsService {

@@ -1,8 +1,8 @@
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
-import { User } from "src/auth/user.entity";
+import { User } from "src/entity/user.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { Category } from "./category.entity";
-import { CreateCategoryDto } from "./dto/create-category.dto";
+import { Category } from "../entity/category.entity";
+import { CreateCategoryDto } from "../dto/create-category.dto";
 
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {

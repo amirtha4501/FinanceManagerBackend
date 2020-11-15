@@ -1,8 +1,8 @@
 import { IsEmail } from "class-validator";
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
-import { Account } from "src/accounts/account.entity";
-import { Category } from "src/categories/category.entity";
+import { Account } from "src/entity/account.entity";
+import { Category } from "src/entity/category.entity";
 
 @Entity()
 @Unique(['email'])

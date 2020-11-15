@@ -1,8 +1,8 @@
 import { BadRequestException } from "@nestjs/common";
 import { EntityRepository, Repository } from "typeorm";
-import { CreateTransferDto } from "./dto/create-transfer.dto";
-import { FilterTransferDto } from "./dto/filter-transfer.dto";
-import { Transfer } from "./transfer.entity";
+import { CreateTransferDto } from "../dto/create-transfer.dto";
+import { FilterTransferDto } from "../dto/filter-transfer.dto";
+import { Transfer } from "../entity/transfer.entity";
 
 @EntityRepository(Transfer)
 export class TransferRepository extends Repository<Transfer> {

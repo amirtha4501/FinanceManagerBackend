@@ -1,17 +1,17 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthSignInDto } from './dto/auth.signin.dto';
-import { AuthSignUpDto } from './dto/auth.signup.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtPayload } from './jwt-payload.interface';
-import { User } from './user.entity';
-import { UserRepository } from './user.repository';
-import { AccountsService } from 'src/accounts/accounts.service';
+import { AuthSignInDto } from '../dto/auth.signin.dto';
+import { AuthSignUpDto } from '../dto/auth.signup.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { JwtPayload } from '../jwt-payload.interface';
+import { User } from '../entity/user.entity';
+import { UserRepository } from '../repository/user.repository';
+import { AccountsService } from 'src/service/accounts.service';
 import * as bcrypt from 'bcrypt';
-import { AccountRepository } from 'src/accounts/account.repository';
-import { CreateAccountDto } from 'src/accounts/dto/create-account.dto';
-import { Account } from 'src/accounts/account.entity';
+import { AccountRepository } from 'src/repository/account.repository';
+import { CreateAccountDto } from 'src/dto/create-account.dto';
+import { Account } from 'src/entity/account.entity';
 
 @Injectable()
 export class AuthService {
@@ -19,12 +19,16 @@ export class AuthService {
     constructor(
         @InjectRepository(UserRepository)
         private userRepository: UserRepository,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private accountService: AccountsService
     ) {}
 
     createDefaultAccount(user: User) {
-        console.log("get accounts " + user);
-        // console.log(this.accountService.temp() + "obtained");
+        const name: string = "general";
+        const current_amount: number = 0;
+        const date: Date = new Date("2019-01-16");  
+        let createdAccount: Promise<Account> = this.accountService.createAccount({name, current_amount, date}, user);
+        console.log(createdAccount + "created account");
     }
 
     async signUp(authSignUpDto: AuthSignUpDto): Promise<{ accessToken: string }> {

@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { AccountRepository } from './account.repository';
-import { AccountsController } from './accounts.controller';
-import { AccountsService } from './accounts.service';
+import { AccountRepository } from '../repository/account.repository';
+import { AccountsController } from '../controller/accounts.controller';
+import { AccountsService } from '../service/accounts.service';
 
 @Module({
   imports: [

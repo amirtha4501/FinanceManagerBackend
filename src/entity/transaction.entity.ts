@@ -1,5 +1,5 @@
-import { Account } from "src/accounts/account.entity";
-import { Category } from "src/categories/category.entity";
+import { Account } from "src/entity/account.entity";
+import { Category } from "src/entity/category.entity";
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne } from "typeorm";
 import { Type } from "../type.enum";
 

@@ -1,8 +1,8 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { Repository, EntityRepository } from "typeorm";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { FilterTransactionsDto } from "./dto/filter-transactions.dto";
-import { Transaction } from "./transaction.entity";
+import { CreateTransactionDto } from "../dto/create-transaction.dto";
+import { FilterTransactionsDto } from "../dto/filter-transactions.dto";
+import { Transaction } from "../entity/transaction.entity";
 
 @EntityRepository(Transaction)
 export class TransactionRepository extends Repository<Transaction> {

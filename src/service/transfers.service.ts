@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateTransferDto } from './dto/create-transfer.dto';
-import { FilterTransferDto } from './dto/filter-transfer.dto';
-import { UpdateTransferDto } from './dto/update-transfer.dto';
-import { Transfer } from './transfer.entity';
-import { TransferRepository } from './transfer.repository';
+import { CreateTransferDto } from '../dto/create-transfer.dto';
+import { FilterTransferDto } from '../dto/filter-transfer.dto';
+import { UpdateTransferDto } from '../dto/update-transfer.dto';
+import { Transfer } from '../entity/transfer.entity';
+import { TransferRepository } from '../repository/transfer.repository';
 
 @Injectable()
 export class TransfersService {

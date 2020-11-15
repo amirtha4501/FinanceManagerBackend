@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TransfersController } from './transfers.controller';
-import { TransfersService } from './transfers.service';
+import { TransfersController } from '../controller/transfers.controller';
+import { TransfersService } from '../service/transfers.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransferRepository } from './transfer.repository';
+import { TransferRepository } from '../repository/transfer.repository';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({

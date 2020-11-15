@@ -1,8 +1,8 @@
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
-import { User } from "src/auth/user.entity";
+import { User } from "src/entity/user.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { Account } from "./account.entity";
-import { CreateAccountDto } from "./dto/create-account.dto";
+import { Account } from "../entity/account.entity";
+import { CreateAccountDto } from "../dto/create-account.dto";
 
 @EntityRepository(Account)
 export class AccountRepository extends Repository<Account> {
