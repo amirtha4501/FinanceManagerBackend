@@ -1,4 +1,4 @@
 export enum Type {
-    EXPENSE = 'EXPENSE',
-    INCOME = 'INCOME'
+    EXPENSE = 'expense',
+    INCOME = 'income'
 }

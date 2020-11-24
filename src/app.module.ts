@@ -1,11 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TransactionsModule } from './transactions/transactions.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
-import { AuthModule } from './auth/auth.module';
-import { AccountsModule } from './accounts/accounts.module';
-import { CategoriesModule } from './categories/categories.module';
-import { TransfersModule } from './transfers/transfers.module';
 import { AccountsController } from './controller/accounts.controller';
 import { AuthController } from './controller/auth.controller';
 import { CategoriesController } from './controller/categories.controller';
@@ -42,11 +37,6 @@ import { TransferRepository } from './repository/transfer.repository';
       TransactionRepository,
       TransferRepository
     ]),
-    // TransactionsModule,
-    // AuthModule,
-    // AccountsModule,
-    // CategoriesModule,
-    // TransfersModule,
   ],
   controllers: [
     AccountsController,

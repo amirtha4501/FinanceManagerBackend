@@ -8,7 +8,7 @@ import { Transaction } from "../entity/transaction.entity";
 export class TransactionRepository extends Repository<Transaction> {
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
-        
+        console.log("create trans")
         const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
         var currentAccount;
         var currentCategory;
@@ -33,22 +33,25 @@ export class TransactionRepository extends Repository<Transaction> {
         transaction.note = note,  
         transaction.tag = tag,  
         transaction.date = date,  
-        transaction.is_planned = is_planned,  
+        transaction.is_planned = is_planned,
         transaction.recurring_payment_id = recurring_payment_id;
         
         if(currentAccount && currentCategory) {
             transaction.account = currentAccount; 
             transaction.category = currentCategory;
+
+            console.log("saved");
             
-            if(transaction.type == 'EXPENSE') {
+            if(transaction.type == 'expense') {
                 currentAccount.current_amount -= amount;
             } else {
-                currentAccount.current_amount += amount;
+                currentAccount.current_amount = +currentAccount.current_amount + +amount;
             }
         } else {
             if(!currentAccount) {
                 throw new BadRequestException("Account does not exist");
             } else {
+                console.log("not saved");
                 throw new BadRequestException("Category does not exist");
             }
         }

@@ -9,8 +9,6 @@ import { User } from '../entity/user.entity';
 import { UserRepository } from '../repository/user.repository';
 import { AccountsService } from 'src/service/accounts.service';
 import * as bcrypt from 'bcrypt';
-import { AccountRepository } from 'src/repository/account.repository';
-import { CreateAccountDto } from 'src/dto/create-account.dto';
 import { Account } from 'src/entity/account.entity';
 
 @Injectable()

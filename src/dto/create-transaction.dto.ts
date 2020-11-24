@@ -6,8 +6,10 @@ export class CreateTransactionDto {
     @IsNotEmpty({ message: 'amount should not be empty'})
     amount: number;
 
+    @IsNotEmpty({ message: 'transaction type should not be empty'})
     type: Type;
 
+    @IsNotEmpty({ message: 'title should not be empty'})
     title: string;
 
     note: string;
