@@ -9,7 +9,7 @@ import { User } from '../entity/user.entity';
 import { UserRepository } from '../repository/user.repository';
 import { AccountsService } from 'src/service/accounts.service';
 import * as bcrypt from 'bcrypt';
-import { Account } from 'src/entity/account.entity';
+import { CategoriesService } from './categories.service';
 
 @Injectable()
 export class AuthService {
@@ -18,15 +18,15 @@ export class AuthService {
         @InjectRepository(UserRepository)
         private userRepository: UserRepository,
         private jwtService: JwtService,
-        private accountService: AccountsService
+        private accountService: AccountsService,
+        private categoriesService: CategoriesService
     ) {}
 
     createDefaultAccount(user: User) {
         const name: string = "general";
         const current_amount: number = 0;
         const date: Date = new Date("2019-01-16");  
-        let createdAccount: Promise<Account> = this.accountService.createAccount({name, current_amount, date}, user);
-        console.log(createdAccount + "created account");
+        this.accountService.createAccount({name, current_amount, date}, user);
     }
 
     async signUp(authSignUpDto: AuthSignUpDto): Promise<{ accessToken: string }> {
@@ -40,11 +40,10 @@ export class AuthService {
         
         try {
             await user.save();
-            console.log("user signed up")
             const accessToken = this.signIn({email, password});
-            console.log("user signed in")
             this.createDefaultAccount(user);
-            console.log("user created account")
+            this.categoriesService.createDefaultCategories(user);
+            
             return accessToken;
         } catch(error) {
             if(error.code === '23505') {

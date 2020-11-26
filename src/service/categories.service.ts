@@ -15,6 +15,12 @@ export class CategoriesService {
         private categoryRepository: CategoryRepository
     ) {}
 
+    async createDefaultCategories(
+        user: User
+    ): Promise<void> {
+        return this.categoryRepository.createDefaultCategories(user);
+    }
+
     async createCategory(
         createCategoryDto: CreateCategoryDto,
         user: User

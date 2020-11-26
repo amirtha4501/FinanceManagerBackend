@@ -15,6 +15,13 @@ export class CategoriesController {
         private categoriesService: CategoriesService
     ) {}
     
+    // @Post('/create')
+    // createDefaultCategories(
+    //     @GetUser() user: User 
+    // ) {
+    //     return this.categoriesService.createDefaultCategories(user);
+    // }
+
     @Post()
     @UsePipes(ValidationPipe)
     createCategory(
