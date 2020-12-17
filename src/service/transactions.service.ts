@@ -33,7 +33,9 @@ export class TransactionsService {
         }
 
         if(transactionIds.includes(id)) {
-            const found = await this.transactionRepository.findOne(id);
+            const found = await this.transactionRepository.findOne(id, {
+                relations:["category"]
+            });
             if(!found) {
                 throw new NotFoundException(`Transaction with ID '${id}' not found`);
             }

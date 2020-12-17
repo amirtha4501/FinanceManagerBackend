@@ -1,4 +1,5 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { Category } from "src/entity/category.entity";
 import { Repository, EntityRepository } from "typeorm";
 import { CreateTransactionDto } from "../dto/create-transaction.dto";
 import { FilterTransactionsDto } from "../dto/filter-transactions.dto";
@@ -8,7 +9,6 @@ import { Transaction } from "../entity/transaction.entity";
 export class TransactionRepository extends Repository<Transaction> {
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
-        console.log("create trans")
         const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
         var currentAccount;
         var currentCategory;
@@ -39,8 +39,6 @@ export class TransactionRepository extends Repository<Transaction> {
         if(currentAccount && currentCategory) {
             transaction.account = currentAccount; 
             transaction.category = currentCategory;
-
-            console.log("saved");
             
             if(transaction.type == 'expense') {
                 currentAccount.current_amount -= amount;
@@ -51,7 +49,6 @@ export class TransactionRepository extends Repository<Transaction> {
             if(!currentAccount) {
                 throw new BadRequestException("Account does not exist");
             } else {
-                console.log("not saved");
                 throw new BadRequestException("Category does not exist");
             }
         }
@@ -65,7 +62,7 @@ export class TransactionRepository extends Repository<Transaction> {
     async getTransactions(filterTransactionsDto: FilterTransactionsDto, accounts, categories): Promise<Transaction[]> {
         
         const { type, categoryName, specifiedAccount, dateFrom, dateTo, amountFrom, amountTo, tag } = filterTransactionsDto;
-        const query = this.createQueryBuilder('transaction');
+        const query = this.createQueryBuilder('transaction').leftJoinAndSelect("transaction.category", "category");
         var ids: number[] = [];
         var categoryId: number;
         
@@ -87,7 +84,7 @@ export class TransactionRepository extends Repository<Transaction> {
                 query.andWhere('transaction.type = :type AND transaction.account IN (:...ids)', { type, ids });
             }
             if(categoryName) {
-                query.andWhere('transaction.category = :categoryId AND transaction.account IN (:...ids)', { categoryId, ids });
+                query.andWhere('transaction.category_id = :categoryId AND transaction.account IN (:...ids)', { categoryId, ids });
             }
             if(amountFrom && amountTo) {
                 query.andWhere('transaction.amount >= :amountFrom AND transaction.amount <= :amountTo AND transaction.account IN (:...ids)', { amountFrom, amountTo, ids });
@@ -121,7 +118,7 @@ export class TransactionRepository extends Repository<Transaction> {
                 query.andWhere('transaction.type = :type AND transaction.account = :specifiedAccount', { type, specifiedAccount });
             }
             if(categoryName) {
-                query.andWhere('transaction.category = :categoryId AND transaction.account = :specifiedAccount', { categoryId, specifiedAccount });
+                query.andWhere('transaction.category_id = :categoryId AND transaction.account = :specifiedAccount', { categoryId, specifiedAccount });
             }
             if(amountFrom && amountTo) {
                 query.andWhere('transaction.amount >= :amountFrom AND transaction.amount <= :amountTo AND transaction.account = :specifiedAccount', { amountFrom, amountTo, specifiedAccount });
@@ -133,8 +130,8 @@ export class TransactionRepository extends Repository<Transaction> {
                 query.andWhere('transaction.tag LIKE :tag AND transaction.account = :specifiedAccount', { tag: `%${tag}%`, specifiedAccount });
             }    
         }
-        
         const transactions = await query.getMany();
+        
         return transactions;
     }
 }

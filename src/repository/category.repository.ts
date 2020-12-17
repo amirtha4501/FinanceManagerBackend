@@ -3,6 +3,7 @@ import { User } from "src/entity/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { Category } from "../entity/category.entity";
 import { CreateCategoryDto } from "../dto/create-category.dto";
+import { id } from "date-fns/locale";
 
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {
@@ -13,7 +14,7 @@ export class CategoryRepository extends Repository<Category> {
             // food
             {
                 name: "food",
-                parent_name: "",
+                parent_name: null,
                 starred: false,
                 type: "expense",
                 color: "red"
@@ -50,7 +51,7 @@ export class CategoryRepository extends Repository<Category> {
             // entertainment
             {
                 name: "entertainment",
-                parent_name: "",
+                parent_name: null,
                 starred: false,
                 type: "expense",
                 color: "green"
@@ -113,14 +114,11 @@ export class CategoryRepository extends Repository<Category> {
             },
         ];
 
-        for(let i = 0; i <= categories.length; i++) {
+        for(let i = 0; i < categories.length; i++) {
             const category = new Category();
-            let parent = null; // ?
-            
-            if(categories[i].parent_name !== "") {
-                parent = await this.findOne({ where: {name: categories[i].parent_name, user: user} });
-            }
-            
+
+            const parent = await this.findOne({ where: {name: categories[i].parent_name, user: user} });
+                
             if(parent) {
                 category.parent_id = parent.id;
             }
@@ -129,7 +127,7 @@ export class CategoryRepository extends Repository<Category> {
             category.type = categories[i].type;
             category.color = categories[i].color;
             category.user = user;
-    
+
             try {
                 await category.save();
             } catch (error) {
@@ -155,7 +153,11 @@ export class CategoryRepository extends Repository<Category> {
         if(parent) {
             category.parent_id = parent.id;
         }
-        category.starred = starred;
+        if(starred) {
+            category.starred = starred;
+        } else {
+            category.starred = false;
+        }
         category.type = type;
         category.color = color;
         category.user = user;
@@ -175,7 +177,39 @@ export class CategoryRepository extends Repository<Category> {
         query.andWhere('category.user = :userId', { userId });
        
         const categories = await query.getMany();
-        return categories;
+        let items: any[] = [];
+
+        for (let i = 0; i < categories.length; i++) {
+
+            if(categories[i].parent_id === null) {
+                let parent: any = {
+                    id: categories[i].id,
+                    name: categories[i].name,
+                    parent_id: categories[i].parent_id,
+                    starred: categories[i].starred,
+                    type: categories[i].type,
+                    color: categories[i].color,
+                    subCategories: []
+                }
+                items.push(parent);
+            } else {
+                let child: any = {
+                    id: categories[i].id,
+                    name: categories[i].name,
+                    parent_id: categories[i].parent_id,
+                    starred: categories[i].starred,
+                    type: categories[i].type,
+                    color: categories[i].color
+                }
+
+                for (let i = 0; i < items.length; i++) {
+                    if(child.parent_id === items[i].id) {
+                        items[i].subCategories.push(child);
+                    }
+                }
+            }
+        }
+        return items;
     }
 
 }

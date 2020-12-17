@@ -75,7 +75,6 @@ export class TransfersService {
 
         transfer.transferred_amount;
         transfer.from_account;
-        console.log(transfer.to_account);
 
         if(fromAccount && toAccount) {
             transfer.from_account = fromAccount;

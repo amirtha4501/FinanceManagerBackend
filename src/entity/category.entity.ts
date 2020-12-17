@@ -1,7 +1,7 @@
 import { User } from "src/entity/user.entity";
 import { Transaction } from "src/entity/transaction.entity";
 import { Type } from "src/type.enum";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 export class Category extends BaseEntity {
@@ -15,7 +15,7 @@ export class Category extends BaseEntity {
     @Column({ nullable: true })
     parent_id: number;
 
-    @Column()
+    @Column({ nullable: true })
     starred: boolean;
 
     @Column()
@@ -28,5 +28,6 @@ export class Category extends BaseEntity {
     user: User;
     
     @OneToMany(type => Transaction, transaction => transaction.category, { eager: true, cascade: true })
+    @JoinColumn()
     transactions: Transaction[]
 }

@@ -1,6 +1,6 @@
 import { Account } from "src/entity/account.entity";
 import { Category } from "src/entity/category.entity";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne, JoinColumn } from "typeorm";
 import { Type } from "../type.enum";
 
 @Entity()

@@ -56,7 +56,10 @@ export class CategoriesService {
         } else {
             throw new ConflictException("category name already exists");
         }
-        category.parent_id = parent.id;
+        
+        if(parent_name) {
+            category.parent_id = parent.id;
+        }
         category.starred = starred;
         category.type = type;
         category.color = color;
