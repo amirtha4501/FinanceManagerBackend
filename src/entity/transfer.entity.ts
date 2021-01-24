@@ -1,5 +1,5 @@
 import { Account } from "src/entity/account.entity";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Transfer extends BaseEntity {
@@ -9,6 +9,9 @@ export class Transfer extends BaseEntity {
 
     @Column({ type: "decimal", nullable: false })
     amount: number;
+
+    @Column({type: "varchar", default: "transfer" })
+    title: string;
 
     @Column({ type: "decimal", default: 0})
     transferred_amount: number;

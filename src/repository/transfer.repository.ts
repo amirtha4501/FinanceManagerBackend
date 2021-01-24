@@ -9,10 +9,10 @@ export class TransferRepository extends Repository<Transfer> {
 
     async createTransfer(createTransferDto: CreateTransferDto, accounts): Promise<Transfer> {
 
-        const { amount, date, from_account_id, to_account_id } = createTransferDto;
+        const { amount, title, date, from_account_id, to_account_id } = createTransferDto;
         var fromAccount;
         var toAccount;
-       
+              
         if(from_account_id == to_account_id) {
             throw new BadRequestException("From and to account should not be same");
         }
@@ -29,6 +29,7 @@ export class TransferRepository extends Repository<Transfer> {
         const transfer = new Transfer(); 
         
         transfer.amount = amount;  
+        // transfer.title = title;
         transfer.transferred_amount = amount;
         transfer.date = date;
 
@@ -56,7 +57,9 @@ export class TransferRepository extends Repository<Transfer> {
 
     async getTransfers(filterTransferDto: FilterTransferDto, accounts): Promise<Transfer[]> {
         const { specifiedAccount, dateFrom, dateTo, amountFrom, amountTo } = filterTransferDto;
-        const query = this.createQueryBuilder('transfer');
+        const query = this.createQueryBuilder('transfer')
+                                .leftJoinAndSelect("transfer.from_account", "from_account")
+                                .leftJoinAndSelect("transfer.to_account", "to_account")
         var ids: number[] = [];
         
         for(let account of accounts) {
@@ -64,20 +67,20 @@ export class TransferRepository extends Repository<Transfer> {
         }
 
         if( !amountFrom && !amountTo && !dateFrom && !dateTo ) {
-            query.where('transfer.from_account_id IN (:...ids) OR transfer.to_account_id IN (:...ids)', { ids });
+            query.where('transfer.fromAccountId IN (:...ids) OR transfer.toAccountId IN (:...ids)', { ids });
         }
 
         if(!specifiedAccount) {
             if(amountFrom && amountTo) {
-                query.andWhere('transfer.amount >= :amountFrom AND transfer.amount <= :amountTo AND transfer.from_account_id IN (:...ids)', { amountFrom, amountTo, ids });
+                query.andWhere('transfer.amount >= :amountFrom AND transfer.amount <= :amountTo AND transfer.fromAccountId IN (:...ids)', { amountFrom, amountTo, ids });
             }
             if(dateFrom && dateTo) {
-                query.andWhere('transfer.date BETWEEN :dateFrom AND :dateTo AND transfer.from_account_id IN (:...ids)', { dateFrom, dateTo, ids });
+                query.andWhere('transfer.date BETWEEN :dateFrom AND :dateTo AND transfer.fromAccountId IN (:...ids)', { dateFrom, dateTo, ids });
             }
         }
 
         if(specifiedAccount) {
-            query.where('transfer.from_account_id = :specifiedAccount OR transfer.to_account_id = :specifiedAccount', { specifiedAccount });
+            query.where('transfer.fromAccountId = :specifiedAccount OR transfer.toAccountId = :specifiedAccount', { specifiedAccount });
         }
         
         const transfers = await query.getMany();

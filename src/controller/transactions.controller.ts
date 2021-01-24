@@ -41,6 +41,14 @@ export class TransactionsController {
     ): Promise<Transaction[]> {
         return this.transactionsService.getTransactions(filterTransactionsDto, accounts, categories);
     }
+
+    @Get('/categorized-transactions') 
+    getTransactionsByCategory(
+        @GetAccount() accounts: Account,
+        @GetCategory() categories: Category
+    ): Promise<any> {
+        return this.transactionsService.getTransactionsByCategory(accounts, categories);
+    }
    
     @Patch('/:id')
     updateTransaction(
