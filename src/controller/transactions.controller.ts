@@ -42,7 +42,7 @@ export class TransactionsController {
         return this.transactionsService.getTransactions(filterTransactionsDto, accounts, categories);
     }
 
-    @Get('/categorized-transactions') 
+    @Get('/review') 
     getTransactionsByCategory(
         @GetAccount() accounts: Account,
         @GetCategory() categories: Category

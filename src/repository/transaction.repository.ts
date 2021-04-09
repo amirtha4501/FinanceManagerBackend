@@ -1,5 +1,4 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
-// import { Category } from "src/entity/category.entity";
 import { Repository, EntityRepository } from "typeorm";
 import { CreateTransactionDto } from "../dto/create-transaction.dto";
 import { FilterTransactionsDto } from "../dto/filter-transactions.dto";
@@ -8,7 +7,7 @@ import { Transaction } from "../entity/transaction.entity";
 @EntityRepository(Transaction)
 export class TransactionRepository extends Repository<Transaction> {
     transactions: any[] = [];
-    // tee: any = [];
+    namedTransactions: any[] = [];
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
         const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
@@ -148,7 +147,6 @@ export class TransactionRepository extends Repository<Transaction> {
 
         for (let category of categories) {
             categoryIds.push(category.id);
-            // console.log(category);
         }
 
         query.where('transaction.account IN (:...ids)', { ids });
@@ -184,9 +182,6 @@ export class TransactionRepository extends Repository<Transaction> {
             return r;
         }, Object.create(null));
 
-        // var par = [];
-        // var par = Object.keys(categorizedTransactions);
-
         for (let [key, value] of Object.entries(categorizedTransactions)) {
 
             value.forEach(val => {
@@ -198,53 +193,35 @@ export class TransactionRepository extends Repository<Transaction> {
                     }
                 });
             });
-
             var transIds = this.transactions.map(x => Object.keys(x)[0]);
             if (!transIds.includes(key)) {
                 let data = {}
-                data[key] = value; // - to return with parent id
-                // categories.forEach(cat => {
-                //     if (cat.id == key) {
-                //         // data[cat.name] = value; // - to return with parent name 
-                //     }
-                // });
+                let category = categories.find(category => category.id == key);
+
+                let detail = {
+                    name: category.name,
+                    color: category.color,
+                    info: value,
+                }
+                data[key] = detail; // - to return with parent id
                 this.transactions.push(data)
             }
-
         }
 
+        // this.transactions.forEach(element => {            
+        //     var data = {};
+        //     categories.forEach(element => {
+        //         // console.log(element)
+        //         // console.log(element.id + " " + Object.keys(this.transactions)[0])
+        //         // console.log(typeof element.id.toString() + " - " + typeof Object.keys(element)[0])
+
+        //         if(element.id.toString() == Object.keys(element)[0]) {
+        //             var name = element.name;
+        //             data[name] = element[Object.keys(element)[0]]
+        //         }
+        //     });
+                
+        // });
         return this.transactions;
     }
 }
-
-                // // this.transactions.forEach(transaction => {
-                //     for (let i = 0; i < this.transactions.length; i++) {
-                //         this.tee.push(Object.keys(this.transactions[i]))
-                //         console.log("par");
-                //         console.log(this.transactions);
-                //         console.log(key + ' ' + typeof key);
-                //         console.log(this.tee);
-                //         console.log(!this.tee.includes(key));
-
-                //         if (!this.tee.includes(key)) {
-                //             console.log("tra bef");
-                //             console.log(this.transactions);
-                //             this.transactions.push(data);
-                //             console.log("tra af");
-                //             console.log(this.transactions);
-                //         }
-                //     }
-                //     // });
-
-                // console.log("transaction st")
-                // console.log(transaction)
-                // console.log(Object.keys(transaction)[0] + " " + typeof Object.keys(transaction)[0])
-                // console.log(key + " " + typeof key);
-                // console.log(this.transactions);
-                // console.log(Object.keys(transaction)[0] != key);
-
-                // if (Object.keys(transaction)[0] != key) {
-                //     // this.tee.push(Object.keys(transaction)[0]);
-                //     this.transactions.push(data);
-                // }
-
