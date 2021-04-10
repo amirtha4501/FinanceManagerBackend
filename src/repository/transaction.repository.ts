@@ -8,6 +8,7 @@ import { Transaction } from "../entity/transaction.entity";
 export class TransactionRepository extends Repository<Transaction> {
     transactions: any[] = [];
     namedTransactions: any[] = [];
+    grandTotal: number = 0;
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
         const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
@@ -137,6 +138,8 @@ export class TransactionRepository extends Repository<Transaction> {
     }
 
     async getTransactionsByCategory(accounts, categories): Promise<any> {
+        this.transactions = [];
+
         const query = this.createQueryBuilder('transaction').leftJoinAndSelect("transaction.category", "category");
         var ids: number[] = [];
         var categoryIds: number[] = [];
@@ -192,7 +195,9 @@ export class TransactionRepository extends Repository<Transaction> {
                         val.total -= transaction.amount;
                     }
                 });
+                this.grandTotal += +val.total;
             });
+
             var transIds = this.transactions.map(x => Object.keys(x)[0]);
             if (!transIds.includes(key)) {
                 let data = {}
@@ -201,27 +206,14 @@ export class TransactionRepository extends Repository<Transaction> {
                 let detail = {
                     name: category.name,
                     color: category.color,
+                    grandTotal: this.grandTotal,
                     info: value,
                 }
                 data[key] = detail; // - to return with parent id
                 this.transactions.push(data)
             }
+            this.grandTotal = 0;
         }
-
-        // this.transactions.forEach(element => {            
-        //     var data = {};
-        //     categories.forEach(element => {
-        //         // console.log(element)
-        //         // console.log(element.id + " " + Object.keys(this.transactions)[0])
-        //         // console.log(typeof element.id.toString() + " - " + typeof Object.keys(element)[0])
-
-        //         if(element.id.toString() == Object.keys(element)[0]) {
-        //             var name = element.name;
-        //             data[name] = element[Object.keys(element)[0]]
-        //         }
-        //     });
-                
-        // });
         return this.transactions;
     }
 }
