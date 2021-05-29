@@ -49,7 +49,14 @@ export class TransactionsController {
     ): Promise<any> {
         return this.transactionsService.getTransactionsByCategory(accounts, categories);
     }
-   
+
+    @Get('/monthly-transactions') 
+    getMonthlyTransactions(
+        @GetAccount() accounts: Account
+    ): Promise<Object[]> {
+        return this.transactionsService.getMonthlyTransactions(accounts);
+    }
+    
     @Patch('/:id')
     updateTransaction(
         @Param('id', ParseIntPipe) id: number, 

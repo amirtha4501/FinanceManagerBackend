@@ -9,6 +9,7 @@ export class TransactionRepository extends Repository<Transaction> {
     transactions: any[] = [];
     namedTransactions: any[] = [];
     grandTotal: number = 0;
+    monthlyTransactions: any[] = [];
 
     async createTransaction(createTransactionDto: CreateTransactionDto, accounts, categories): Promise<Transaction> {
         const { amount, type, title, note, tag, date, account_id, category_id, is_planned, recurring_payment_id } = createTransactionDto;
@@ -215,5 +216,50 @@ export class TransactionRepository extends Repository<Transaction> {
             this.grandTotal = 0;
         }
         return this.transactions;
+    }
+
+    async getTransactionsByMonth(accounts): Promise<Object> {
+        const query = await this.createQueryBuilder('transaction');
+        var ids: number[] = [];
+
+        for (let account of accounts) {
+            ids.push(account.id);
+        }
+        query.where('transaction.account IN (:...ids)', { ids });
+        const transactions = await query.getMany();
+
+        let group = transactions.reduce((r, a) => {
+            r[new Date(a.date).getMonth()] = [...r[new Date(a.date).getMonth()] || [], a];
+            return r;
+        }, {});
+        return group;
+    }
+
+    async getMonthlyTransactions(accounts): Promise<Object[]> {
+        this.monthlyTransactions = [];
+        let data = await this.getTransactionsByMonth(accounts);
+        let availableMonths = Object.keys(data);
+
+        for (let i = 0; i < availableMonths.length; i++) {
+            var transactionSet = { totalIncomes: 0, totalExpenses: 0, transactions: 0 }
+
+            for (let j = 0; j < data[availableMonths[i]].length; j++) {
+                let transaction = data[availableMonths[i]][j];
+                let date = new Date(transaction.date)
+
+                transactionSet['id'] = date.getMonth();
+                transactionSet['month'] = date.toLocaleString('default', { month: 'long' });
+                transactionSet['transactions'] = transactionSet['transactions'] + 1;
+                transactionSet['chart'] = [];
+                
+                if (transaction.type === 'income') {
+                    transactionSet['totalIncomes'] = +transactionSet['totalIncomes'] + +transaction.amount;
+                } else {
+                    transactionSet['totalExpenses'] -= transaction.amount;
+                }
+            }
+            this.monthlyTransactions.push(transactionSet);
+        }
+        return this.monthlyTransactions;
     }
 }

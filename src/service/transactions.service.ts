@@ -59,6 +59,10 @@ export class TransactionsService {
     ): Promise<any> {
         return this.transactionRepository.getTransactionsByCategory(accounts, categories);
     }
+
+    async getMonthlyTransactions(accounts): Promise<Object[]> {
+        return this.transactionRepository.getMonthlyTransactions(accounts);
+    }
    
     async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto, accounts, categories): Promise<Transaction> {
         const transaction = await this.getTransactionById(id, accounts);
