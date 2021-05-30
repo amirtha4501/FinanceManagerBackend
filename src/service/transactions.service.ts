@@ -50,6 +50,7 @@ export class TransactionsService {
         accounts: Account,
         categories: Category
     ): Promise<Transaction[]> {
+        this.getReports(accounts);
         return this.transactionRepository.getTransactions(filterTransactionsDto, accounts, categories);
     }
 
@@ -62,6 +63,15 @@ export class TransactionsService {
 
     async getMonthlyTransactions(accounts): Promise<Object[]> {
         return this.transactionRepository.getMonthlyTransactions(accounts);
+    }
+
+    async getReports(accounts) {
+        var ids: number[] = [];
+
+        for (let account of accounts) {
+            ids.push(account.id);
+        }
+        this.transactionRepository.getTransactionReport(ids);
     }
    
     async updateTransaction(id: number, updateTransactionDto: UpdateTransactionDto, accounts, categories): Promise<Transaction> {

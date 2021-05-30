@@ -57,6 +57,13 @@ export class TransactionsController {
         return this.transactionsService.getMonthlyTransactions(accounts);
     }
     
+    @Get('/reports')
+    getReports(
+        @GetAccount() accounts: Account
+    ) {
+        return this.transactionsService.getReports(accounts);
+    }
+
     @Patch('/:id')
     updateTransaction(
         @Param('id', ParseIntPipe) id: number, 

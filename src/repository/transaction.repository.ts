@@ -251,7 +251,7 @@ export class TransactionRepository extends Repository<Transaction> {
                 transactionSet['month'] = date.toLocaleString('default', { month: 'long' });
                 transactionSet['transactions'] = transactionSet['transactions'] + 1;
                 transactionSet['chart'] = [];
-                
+
                 if (transaction.type === 'income') {
                     transactionSet['totalIncomes'] = +transactionSet['totalIncomes'] + +transaction.amount;
                 } else {
@@ -261,5 +261,29 @@ export class TransactionRepository extends Repository<Transaction> {
             this.monthlyTransactions.push(transactionSet);
         }
         return this.monthlyTransactions;
+    }
+
+    async getTransactionReport(ids: number[]): Promise<Object> {
+        const query = this.createQueryBuilder('transaction').where('transaction.account IN (:...ids)', { ids });
+        const transactions = await query.getMany();
+
+        let finalObj = {}
+        transactions.forEach((d) => {
+            const date = new Date(d.date)
+            const year = `${date.getFullYear()}`;
+            const month = `${date.getMonth()}`;
+
+            if (finalObj[year]) {
+                if (finalObj[year].hasOwnProperty(month)) {
+                    finalObj[year][month].push(d)
+                } else {
+                    finalObj[year][month] = [d]
+                }
+            } else {
+                finalObj[year] = { [month]: [] }
+            }
+        })
+        console.log(finalObj)
+        return
     }
 }
