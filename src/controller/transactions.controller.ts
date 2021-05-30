@@ -60,7 +60,7 @@ export class TransactionsController {
     @Get('/reports')
     getReports(
         @GetAccount() accounts: Account
-    ) {
+    ): Promise<Object> {
         return this.transactionsService.getReports(accounts);
     }
 

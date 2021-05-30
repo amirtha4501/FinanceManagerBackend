@@ -272,18 +272,46 @@ export class TransactionRepository extends Repository<Transaction> {
             const date = new Date(d.date)
             const year = `${date.getFullYear()}`;
             const month = `${date.getMonth()}`;
-
+            const day = `${date.getDate()}`;
+            // If year key exists
             if (finalObj[year]) {
-                if (finalObj[year].hasOwnProperty(month)) {
-                    finalObj[year][month].push(d)
+                if (finalObj[year].hasOwnProperty(month)) { // If month already exists
+                    if (finalObj[year][month].hasOwnProperty(day)) {
+                        if (d.type === 'expense') {
+                            finalObj[year][month][day].expense = +finalObj[year][month][day].expense + +d.amount
+                        } else {
+                            finalObj[year][month][day].income = +finalObj[year][month][day].income + +d.amount
+                        }
+                    } else {
+                        finalObj[year][month][day] = { 'income': 0, 'expense': 0 }
+                        if (d.type === 'expense') {
+                            finalObj[year][month][day].expense = +d.amount
+                        } else {
+                            finalObj[year][month][day].income = +d.amount
+                        }
+                    }
                 } else {
-                    finalObj[year][month] = [d]
+                    finalObj[year][month] = { [day]: { 'income': 0, 'expense': 0 } }
                 }
             } else {
-                finalObj[year] = { [month]: [] }
+                // If year key doesn't exists
+                if (d.type === 'income') {
+                    finalObj[year] = { [month]: { [day]: { income: +d.amount, expense: 0 } } }
+                } else {
+                    finalObj[year] = { [month]: { [day]: { income: 0, expense: +d.amount } } }
+                }
             }
+            console.log(finalObj)
         })
-        console.log(finalObj)
-        return
+        return finalObj;
+    }
+
+    async getReports(ids: number[]): Promise<Object> {
+        let report = {
+            transactionReport: await this.getTransactionReport(ids),
+            balanceReport: null,
+            incomeExpenseReport: null
+        }
+        return report;
     }
 }
