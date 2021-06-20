@@ -8,6 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from 'src/decorator/get-account.decorator';
 import { GetCategory } from 'src/decorator/get-category.decorator';
 import { Category } from 'src/entity/category.entity';
+import { Account } from 'src/entity/account.entity';
 
 @Controller('transactions')
 @UseGuards(AuthGuard())

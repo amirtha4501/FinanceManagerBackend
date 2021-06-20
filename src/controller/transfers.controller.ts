@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from 'src/decorator/get-account.decorator';
+import { Account } from 'src/entity/account.entity';
 import { CreateTransferDto } from '../dto/create-transfer.dto';
 import { FilterTransferDto } from '../dto/filter-transfer.dto';
 import { UpdateTransferDto } from '../dto/update-transfer.dto';

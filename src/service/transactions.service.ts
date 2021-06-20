@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionRepository } from '../repository/transaction.repository';
 import { Transaction } from '../entity/transaction.entity';
 import { Category } from 'src/entity/category.entity';
+import { Account } from 'src/entity/account.entity';
 
 @Injectable()
 export class TransactionsService {

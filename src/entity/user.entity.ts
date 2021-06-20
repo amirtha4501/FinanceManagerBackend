@@ -24,6 +24,9 @@ export class User extends BaseEntity {
     @Column()
     salt: string;
 
+    @Column()
+    date: Date;
+    
     @OneToMany(type => Account, account => account.user, { eager: true, cascade: true })
     accounts: Account[];
 

@@ -25,7 +25,7 @@ export class AuthService {
     createDefaultAccount(user: User) {
         const name: string = "general";
         const current_amount: number = 0;
-        const date: Date = new Date("2019-01-16");  
+        const date: Date = new Date();  
         this.accountService.createAccount({name, current_amount, date}, user);
     }
 
@@ -37,6 +37,7 @@ export class AuthService {
         user.email = email;
         user.salt = await bcrypt.genSalt();
         user.password = await this.userRepository.hashPassword(password, user.salt);
+        user.date = new Date();
         
         try {
             await user.save();
